@@ -1,9 +1,9 @@
 #include <avr/io.h>
-#include <stdio.h>
+
 #include "uart.h"
 
 #ifndef BAUD
-#define BAUD 115200
+#define BAUD 9600 
 #endif
 #include <util/setbaud.h>
 
@@ -23,18 +23,23 @@ void uart_init(void) {
     UCSR0B = _BV(RXEN0) | _BV(TXEN0);   /* Enable RX and TX */    
 }
 
-void uart_putchar(char c, FILE *stream) {
-    if (c == '\n') {
-        uart_putchar('\r', stream);
-    }
-    loop_until_bit_is_set(UCSR0A, UDRE0);
+void uart_putchar(char c) {
     UDR0 = c;
+    loop_until_bit_is_set(UCSR0A, UDRE0);
+
 }
 
-char uart_getchar(FILE *stream) {
+char uart_getchar() {
     loop_until_bit_is_set(UCSR0A, RXC0);
     return UDR0;
 }
 
-FILE uart_output = FDEV_SETUP_STREAM(uart_putchar, NULL, _FDEV_SETUP_WRITE);
-FILE uart_input = FDEV_SETUP_STREAM(NULL, uart_getchar, _FDEV_SETUP_READ);
+
+void uart_putstring(char* c) {
+    int i=0;
+    while (c[i]!=0) {
+        uart_putchar(c[i]);
+        i++;
+    }
+    
+}

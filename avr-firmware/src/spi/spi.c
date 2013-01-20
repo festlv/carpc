@@ -26,9 +26,6 @@
 extern "C"{
 #endif
 
-#ifdef __ARDUINO__
-#include <wiring.h>
-#endif
 
 void setup_spi(uint8_t mode, int dord, int interrupt, uint8_t clock)
 {

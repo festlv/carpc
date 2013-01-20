@@ -11,16 +11,26 @@
 /** Initializes SPI in master mode, at CLK/16 = 1MHz.
 */
 int canbus_init_spi() {
-	setup_spi(SPI_MODE_0, SPI_MSB, 0,SPI_MSTR_CLK4);
+	setup_spi(SPI_MODE_0, SPI_MSB, 0, SPI_MSTR_CLK4);
 }
 
-void canbus_ss_low() {
-	PORTC |= (1<<PC0);
+inline void canbus_ss_low() {
+	PORTC &= ~(1<<PC0);
 	_delay_ms(1);
 }
 
+uint8_t canbus_status() {
+	uint8_t tmp;
+	canbus_ss_low();
+	send_spi(READ);
+	send_spi(CANSTAT);
+	tmp=send_spi(0x00);
+	canbus_ss_high();
+	return tmp;
+}
 
-void canbus_ss_high() {
+
+inline void canbus_ss_high() {
 	PORTC |= (1<<PC0);
 	_delay_ms(1);
 }
@@ -68,10 +78,17 @@ int canbus_init() {
 	send_spi(BIT_MODIFY);
 	send_spi(CANCTRL);
 	send_spi(mask);
-	send_spi(LOOPBACK);
+	send_spi(LISTEN);
 	canbus_ss_high();
 
-	return 0;
+	uint8_t status = canbus_status();
+	uint8_t req_status = 0b01100000;
+
+	if ((status & req_status) == req_status) {
+		return 0;
+	}
+	else return 1;
+
 }
 int canbus_read_key() {
 	return 0;

@@ -33,4 +33,10 @@ int canbus_init();
 */
 int canbus_read_key();
 
+/*
+* @return 1 on successful initialization of CAN controller
+
+*/
+uint8_t canbus_status();
+
 #endif
