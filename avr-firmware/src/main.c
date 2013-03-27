@@ -2,9 +2,10 @@
 
 #include "canbus/canbus.h"
 #include "uart/uart.h"
-
+#include <stdio.h>
 #include <util/delay.h>
-
+#include <rti/rti.h>
+#include "time/time.h"
 
 uint8_t tmp;
 char tempchar;
@@ -12,18 +13,14 @@ char tempchar;
 int main(void) {
 	uart_init();
 	if (canbus_init()!=0) {
-		uart_putstring("Init failed!");
+        printf("#CAN init failed!");
 	}
-	DDRC |= (1<<PC3);
-	PORTC |=(1<<PC3);
-
-	uart_putstring("Init successful!");
+    rti_init();
     for (;;) {
     	_delay_ms(1000);
+        rti_loop();
     	tmp = canbus_status();
-    	uart_putchar((char) tmp);
-    	
-    	PORTC ^= (1<<PC3);
+    	printf("%x", tmp);
 
 
     	

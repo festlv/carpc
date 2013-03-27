@@ -1,21 +1,26 @@
 #include <util/delay.h>
 #include <avr/io.h>
 
-#include "../config.h"
-#include "../spi/spi.h"
+#include "config.h"
+#include "spi/spi.h"
 
-#include "canbus.h"
-#include "mcp2515.h"
+#include "canbus/canbus.h"
+#include "canbus/mcp2515.h"
 
 
 /** Initializes SPI in master mode, at CLK/16 = 1MHz.
 */
-int canbus_init_spi() {
+static void canbus_init_spi() {
 	setup_spi(SPI_MODE_0, SPI_MSB, 0, SPI_MSTR_CLK4);
 }
 
-inline void canbus_ss_low() {
-	PORTC &= ~(1<<PC0);
+static inline void canbus_ss_low() {
+	CANBUS_CS_PORT &= ~(1<<CANBUS_CS_BIT);
+	_delay_ms(1);
+}
+
+static inline void canbus_ss_high() {
+	CANBUS_CS_PORT |= (1<<CANBUS_CS_BIT);
 	_delay_ms(1);
 }
 
@@ -30,24 +35,22 @@ uint8_t canbus_status() {
 }
 
 
-inline void canbus_ss_high() {
-	PORTC |= (1<<PC0);
-	_delay_ms(1);
-}
+
 /**
 * Resets MCP2515 by holding reset line low for 10ms
 */
 void canbus_reset() {
-	PORTC &= ~(1<<PC1);
+	CANBUS_RESET_PORT &= ~(1<<CANBUS_RESET_BIT);
 	_delay_ms(10);
-	PORTC |= (1<<PC1);
+	CANBUS_RESET_PORT |= (1<<CANBUS_RESET_BIT);
 	_delay_ms(10);
 }
 
 
 int canbus_init() {
 	canbus_init_spi();
-	DDRC |= (1<<PC0) | (1<<PC1);
+	CANBUS_RESET_DDR |= (1<<CANBUS_RESET_BIT);
+	CANBUS_CS_DDR |= (1<<PC1);
 
 	canbus_reset();
 
@@ -78,7 +81,7 @@ int canbus_init() {
 	send_spi(BIT_MODIFY);
 	send_spi(CANCTRL);
 	send_spi(mask);
-	send_spi(LISTEN);
+	send_spi(LOOPBACK);
 	canbus_ss_high();
 
 	uint8_t status = canbus_status();

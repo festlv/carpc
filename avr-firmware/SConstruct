@@ -11,7 +11,7 @@ env['CC'] = 'avr-gcc'
 env['CPPPATH'] = ['/usr/avr/include/', 'build']
 env['OBJCOPY'] = 'avr-objcopy'
 env['SIZE'] = 'avr-size'
-env.Append(CCFLAGS = '-Os -Wall')
+env.Append(CCFLAGS = '-Os -Wall -std=c99')
 
 # Declare some variables about microcontroller.
 # Microcontroller type.

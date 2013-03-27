@@ -1,10 +1,14 @@
 #ifndef __UART__H
 #define __UART__H
 
+#include <stdio.h>
 
-extern void uart_putchar(char c);
+extern FILE uart0_output;
+extern FILE uart0_input;
+
+extern int uart_putchar(char c, FILE* stream);
 extern void uart_putstring(char* c);
-extern char uart_getchar();
+extern int uart_getchar(FILE* stream);
 
 extern void uart_init(void);
 
