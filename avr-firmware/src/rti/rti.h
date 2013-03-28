@@ -17,14 +17,12 @@ For more information see: http://translate.googleusercontent.com/translate_c?dep
 */
 
 extern void rti_init();
-//should be called in execution loop
-extern void rti_loop();
 
 extern void rti_set_brightness(uint8_t level);
 
 extern void rti_disable_screen();
 
 extern void rti_enable_screen();
-
+extern void rti_step();
 
 #endif

@@ -53,7 +53,7 @@ Default(env.Command(None, TARGET + '.elf', env['SIZE'] + ' -C --mcu=' + DEVICE +
 env.Append(AVRDUDE_BASE = 'avrdude -c usbasp -p %s' % (DEVICE))
 
 env.Append(LFUSE = '0xff')
-env.Append(HFUSE = '0xdf')
+env.Append(HFUSE = '0xda')
 env.Append(EFUSE = '0x05')
 
 # avrdude command wrappers

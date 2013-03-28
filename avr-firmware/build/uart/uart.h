@@ -1,6 +1,6 @@
 #ifndef __UART__H
 #define __UART__H
-
+#include "config.h"
 #include <stdio.h>
 
 extern FILE uart0_output;
