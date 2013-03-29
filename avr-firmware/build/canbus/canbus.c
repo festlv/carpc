@@ -109,8 +109,8 @@ uint8_t canbus_read_rx_buffer(uint8_t buffer_num, CAN_MESSAGE * msg) {
 	ed_h = send_spi(0xFF);
 	ed_l = send_spi(0xFF); 
 	//we're only interested in lowest 4 bits
-		msg->data_len = send_spi(0xFF) & 0x0f;
-
+    msg->data_len = send_spi(0xFF) & 0x0f;
+    
 	if (msg->data_len > 0) {
 
 		for (uint8_t i = 0; i < 8;i++) {
@@ -119,16 +119,14 @@ uint8_t canbus_read_rx_buffer(uint8_t buffer_num, CAN_MESSAGE * msg) {
 		//we could be done now, you know,
 		//but we need to have some fun with byte mangling
 		//see page 28 of MCP2515 datasheet
-		msg->id = ((uint16_t) (id_h &(0b11111000)) << 3) | ((id_l&0b11100000) >> 5);
-
-		printf("id_h: %c\n", id_h);
-		printf("id_l: %c\n", id_l);
-		printf("id: %u\n", msg->id);
+		msg->id = (uint16_t) (id_h << 3) | ((id_l&0b11100000) >> 5);
+        printf("ed_h: %hhx\n", ed_h);
+        printf("ed_l: %hhx\n", ed_l);
 		if (id_l & 0x08) {
 			//this is an extended frame, some more byte mangling
-			msg->extended_id = ((uint32_t) id_l << 16) | 
-				((uint32_t) ed_h << 8) | 
-				((uint32_t) ed_l);
+			msg->extended_id = ((uint32_t) (id_l&0b11) << 16) | 
+				(((uint32_t) ed_h) << 8) | 
+				((uint32_t) ed_l&0xFF);
 		}
 
 		msg->ext = (id_l & 0x08)==0x08;
@@ -160,8 +158,6 @@ uint8_t canbus_write_tx_buffer(uint8_t buffer_num, CAN_MESSAGE *msg) {
 	send_spi(tx_buf_reg);
 	if (!msg->ext) {
 		send_spi((uint8_t)(msg->id >> 3));
-		printf("th: %x\n", (uint8_t)(msg->id >> 3));
-		printf("tl: %x\n",(uint8_t)(msg->id<<5) );
 		send_spi((uint8_t)(msg->id<<5));
 		send_spi(0x00);
 		send_spi(0x00);
@@ -170,7 +166,9 @@ uint8_t canbus_write_tx_buffer(uint8_t buffer_num, CAN_MESSAGE *msg) {
 		send_spi((uint8_t)(msg->id >> 3));
 		send_spi( 
 			(uint8_t) ((0xff & (msg->id<<5)) | 0x08 | (msg->extended_id >> 16)));
-		send_spi((uint8_t) msg->extended_id << 8);
+		send_spi((uint16_t) msg->extended_id >> 8);
+        printf("ted_h: %hhx\n", (uint16_t) msg->extended_id >> 8);
+        printf("ted_l: %hhx\n", (uint8_t) msg->extended_id);
 		send_spi((uint8_t) msg->extended_id);
 	}
 

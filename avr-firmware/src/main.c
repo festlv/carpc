@@ -32,7 +32,8 @@ int main(void) {
     rx.data[7] = '8';
 
     rx.data_len = 8;
-    rx.ext = 0;
+    rx.ext = 1;
+    rx.extended_id = 0b10111111111111111;
     canbus_write_tx_buffer(0, &rx);
 
     while (1) {
@@ -48,7 +49,7 @@ int main(void) {
   			printf("ID: %x\n", tx.id);
   			printf("Data: %s\n", (char*)tx.data);
   			printf("Len: %u\n", tx.data_len);
-  			printf("Ext: %lx\n", tx.extended_id);
+  			printf("Ext: %x\n", tx.extended_id);
   			printf("Ext flag: %u\n", tx.ext);
   		}
   		_delay_ms(1000);
