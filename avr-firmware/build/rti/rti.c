@@ -4,7 +4,7 @@
 #include "time/time.h"
 #include <stdio.h>
 //delay between bytes, ms
-static const int rti_delay = 45; 
+static const int rti_delay = 100; 
 
 enum display_mode_name {RTI_RGB, RTI_PAL, RTI_NTSC, RTI_OFF};
 
@@ -14,11 +14,15 @@ static const char brightness_levels[] = {0x20, 0x61, 0x62, 0x23, 0x64, 0x25, 0x2
 
 static int current_display_mode = RTI_PAL;
 static uint8_t send_brightness = 1;
-static uint8_t current_brightness_level = 15;
+static uint8_t current_brightness_level = 5;
 
 static uint8_t current_byte=0;
 
+//delay between bits.
+//it should actually be 416, but since interrupts take their time,
+//the value needs to be lower
 const int rti_bit_delay = 401;
+
 static uint32_t rti_step_time=0;
 
 void rti_bitbang_tx(char byte_to_tx);
