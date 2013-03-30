@@ -12,6 +12,7 @@
 uint8_t tmp;
 char tempchar;
 CAN_MESSAGE rx, tx;
+uint8_t *id_ptr;
 
 int main(void) {
     uart_init();
@@ -20,7 +21,6 @@ int main(void) {
     rti_init();
     printf("Init done.\n\n");
     rti_enable_screen();
-    rx.id = 0x95;
     rx.data[0] = '1';
     rx.data[1] = '2';
     rx.data[2] = '3';
@@ -33,25 +33,30 @@ int main(void) {
 
     rx.data_len = 8;
     rx.ext = 1;
-    rx.extended_id = 0b10111111111111111;
+    rx.id = 0x616263;
     canbus_write_tx_buffer(0, &rx);
-
+    int8_t buf_num = -1;
     while (1) {
-  		if (canbus_read_rx_buffer(0, &tx)>0) {
-  			printf("Received CAN message\n");
-  			printf("ID: %x\n", tx.id);
-  			printf("Data: %s\n", (char*)tx.data);
-  			printf("Len: %u\n", tx.data_len);
-  			printf("Ext: %lx\n", tx.extended_id);
-  			printf("Ext flag: %u\n", tx.ext);
-  		} else if (canbus_read_rx_buffer(1, &tx)>0) {
-  			printf("Received CAN message\n");
-  			printf("ID: %x\n", tx.id);
-  			printf("Data: %s\n", (char*)tx.data);
-  			printf("Len: %u\n", tx.data_len);
-  			printf("Ext: %x\n", tx.extended_id);
-  			printf("Ext flag: %u\n", tx.ext);
-  		}
-  		_delay_ms(1000);
+        if (canbus_rx_status(0)) {
+            buf_num = 0; 
+        } else if (canbus_rx_status(1)) {
+            buf_num = 1;
+        }
+
+  		if (buf_num!=-1 && canbus_read_rx_buffer(buf_num, &tx) >0 ) {
+  			printf("~");
+            for (int8_t i=tx.data_len-1;i>=0; i--)
+                putchar(tx.data[i]);
+            //fwrite(&(tx.id), 4, 1, stdout);
+            for (int8_t j=3;j>=0;j--) {
+                putchar((char)( *(((uint8_t*)&tx.id)+j)));
+            }
+            printf(".\n");
+
+        }   
+        buf_num = -1;
+        _delay_ms(1000);
+        
+        canbus_write_tx_buffer(0, &rx);
     }
-}   
+}

@@ -11,8 +11,7 @@ typedef struct CAN_message {
 	//message data
 	char data[8];
 	//message identifier
-	uint16_t id;
-	uint32_t extended_id;
+	uint32_t id;
 
 	//length of data
 	uint8_t data_len;
@@ -31,7 +30,7 @@ extern int canbus_init();
 * @return 1 on successful initialization of CAN controller
 
 */
-extern uint8_t canbus_status();
+extern uint8_t canbus_status_reg();
 
 
 //reads receive buffer into CAN_MESSAGE struct pointed to by msg
@@ -40,4 +39,6 @@ extern uint8_t canbus_status();
 extern uint8_t canbus_read_rx_buffer(uint8_t buffer_num, CAN_MESSAGE * msg);
 extern uint8_t canbus_write_tx_buffer(uint8_t buffer_num, CAN_MESSAGE *msg);
 
+//return 1 if there is message in buffer `buffer_num`  
+extern uint8_t canbus_rx_status(uint8_t buffer_num);
 #endif
