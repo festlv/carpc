@@ -92,7 +92,7 @@ int canbus_init() {
 	send_spi(BIT_MODIFY);
 	send_spi(CANCTRL);
 	send_spi(mask);
-	send_spi(LOOPBACK);
+	send_spi(LISTEN);
 	canbus_ss_high();
 	uint8_t status = canbus_status_reg();
 	uint8_t req_status = 0b0100000;

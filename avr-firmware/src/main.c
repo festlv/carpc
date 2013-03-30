@@ -11,7 +11,7 @@
 
 uint8_t tmp;
 char tempchar;
-CAN_MESSAGE rx, tx;
+CAN_MESSAGE tx;
 uint8_t *id_ptr;
 
 int main(void) {
@@ -21,20 +21,7 @@ int main(void) {
     rti_init();
     printf("Init done.\n\n");
     rti_enable_screen();
-    rx.data[0] = '1';
-    rx.data[1] = '2';
-    rx.data[2] = '3';
 
-    rx.data[3] = '4';
-    rx.data[4] = '5';
-    rx.data[5] = '6';
-    rx.data[6] = '7';
-    rx.data[7] = '8';
-
-    rx.data_len = 8;
-    rx.ext = 1;
-    rx.id = 0x616263;
-    canbus_write_tx_buffer(0, &rx);
     int8_t buf_num = -1;
     while (1) {
         if (canbus_rx_status(0)) {
@@ -55,8 +42,5 @@ int main(void) {
 
         }   
         buf_num = -1;
-        _delay_ms(1000);
-        
-        canbus_write_tx_buffer(0, &rx);
     }
 }
