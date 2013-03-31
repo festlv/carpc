@@ -2,6 +2,7 @@
 
 #include <avr/io.h>
 
+#include "can_volvo/can_volvo.h"
 #include "canbus/canbus.h"
 #include "uart/uart.h"
 #include <stdio.h>
@@ -16,31 +17,25 @@ uint8_t *id_ptr;
 
 int main(void) {
     uart_init();
-    canbus_init();
+    can_volvo_init();
     time_init();
     rti_init();
     printf("Init done.\n\n");
     rti_enable_screen();
-
-    int8_t buf_num = -1;
+    tx.id = 0x040066;
+    tx.ext = 1;
+    tx.data_len = 8;
+    tx.data[0]=0x40;
+    tx.data[1]=0x00;
+    tx.data[2]=0xf5;
+    tx.data[3]=0x01;
+    tx.data[4]=0x84;
+    tx.data[5]=0xf4;
+    tx.data[6]=0x07;
+    tx.data[7]=0x00;
+    canbus_write_tx_buffer(0, &tx);
     while (1) {
-        if (canbus_rx_status(0)) {
-            buf_num = 0; 
-        } else if (canbus_rx_status(1)) {
-            buf_num = 1;
-        }
-
-  		if (buf_num!=-1 && canbus_read_rx_buffer(buf_num, &tx) >0 ) {
-  			printf("~");
-            for (int8_t i=tx.data_len-1;i>=0; i--)
-                putchar(tx.data[i]);
-            //fwrite(&(tx.id), 4, 1, stdout);
-            for (int8_t j=3;j>=0;j--) {
-                putchar((char)( *(((uint8_t*)&tx.id)+j)));
-            }
-            printf(".\n");
-
-        }   
-        buf_num = -1;
+        rti_step();
+        can_volvo_step();        
     }
 }

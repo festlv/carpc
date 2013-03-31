@@ -32,11 +32,6 @@ static inline uint8_t canbus_read_reg(uint8_t reg) {
 	canbus_ss_high();
 	return tmp;
 }
-//reads contents of CANSTAT register
-uint8_t canbus_status_reg() {
-    return canbus_read_reg(CANSTAT);
-}
-
 uint8_t canbus_status() {
 	uint8_t tmp;
 	canbus_ss_low();
@@ -47,27 +42,38 @@ uint8_t canbus_status() {
 }
 
 
-
-/**
-* Resets MCP2515 by holding reset line low for 10ms
-*/
-void canbus_reset() {
-	CANBUS_RESET_PORT &= ~(1<<CANBUS_RESET_BIT);
-	_delay_ms(10);
-	CANBUS_RESET_PORT |= (1<<CANBUS_RESET_BIT);
-	_delay_ms(10);
+//reads contents of CANSTAT register
+uint8_t canbus_status_reg() {
+    return canbus_read_reg(CANSTAT);
 }
 
 
-int canbus_init() {
-	canbus_init_spi();
-	CANBUS_RESET_DDR |= (1<<CANBUS_RESET_BIT);
-	CANBUS_CS_DDR |= (1<<CANBUS_CS_BIT);
+//write contents of register
+static inline void canbus_write_reg(uint8_t reg, uint8_t val) {
+    canbus_ss_low();
+	send_spi(WRITE);
+	send_spi(reg);
+	send_spi(val);
+	canbus_ss_high();
+}
 
-	canbus_reset();
-	//Sends appropriate CNF registers for 125kbit/s CAN baud rate
-
+uint8_t canbus_set_mode(uint8_t mode) {
+	uint8_t mask = 0xE0;
 	canbus_ss_low();
+	send_spi(BIT_MODIFY);
+	send_spi(CANCTRL);
+	send_spi(mask);
+	send_spi(mode);
+	canbus_ss_high();
+	uint8_t status = canbus_status_reg();
+    if (status & mode)
+        return 1;
+    else return 0;
+}
+
+static void canbus_set_baudrate() {
+    //sets baud rate to 125kbit/s
+    canbus_ss_low();
 	send_spi(WRITE);
 	send_spi(CNF0);
 	send_spi(0x03);
@@ -84,24 +90,40 @@ int canbus_init() {
 	send_spi(CNF2);
 	send_spi(0x05);
 	canbus_ss_high();
+}
 
-	//sets CAN controller in listen mode
 
-	int mask = 0xE0;
-	canbus_ss_low();
-	send_spi(BIT_MODIFY);
-	send_spi(CANCTRL);
-	send_spi(mask);
-	send_spi(LISTEN);
-	canbus_ss_high();
-	uint8_t status = canbus_status_reg();
-	uint8_t req_status = 0b0100000;
-	if ((status & req_status) == req_status) {
-        printf("CAN init failed\n");
-		return 0;
-	}
-	else return 1;
 
+/**
+* Resets MCP2515 by holding reset line low for 10ms
+*/
+void canbus_reset() {
+	CANBUS_RESET_PORT &= ~(1<<CANBUS_RESET_BIT);
+	_delay_ms(10);
+	CANBUS_RESET_PORT |= (1<<CANBUS_RESET_BIT);
+	_delay_ms(10);
+}
+
+static void canbus_init_pins() {
+	CANBUS_RESET_DDR |= (1<<CANBUS_RESET_BIT);
+	CANBUS_CS_DDR |= (1<<CANBUS_CS_BIT);
+}
+int8_t canbus_init_controller() {
+    canbus_init_spi();
+    canbus_init_pins();
+    canbus_reset();
+    canbus_set_baudrate();
+    return 1;
+}
+int canbus_init() {
+    canbus_init_controller();
+    //sets CAN controller in listen mode
+    if (canbus_set_mode(LOOPBACK)!=1) {
+        printf("CAN init failed.\n");
+        return 0;
+    } else {
+        return 1;
+    }
 }
 
 
@@ -134,7 +156,7 @@ uint8_t canbus_read_rx_buffer(uint8_t buffer_num, CAN_MESSAGE * msg) {
                 (((uint32_t)id_h)<<21);
             //mask out upper three bits (standard + ext identifiers are only 29
             //bits long
-            //msg->id &= 0x1FFFFFFF;
+            msg->id &= 0x1FFFFFFF;
             msg->ext = 1;
 		} else {
 
@@ -174,7 +196,7 @@ uint8_t canbus_write_tx_buffer(uint8_t buffer_num, CAN_MESSAGE *msg) {
 		send_spi(0x00);
 	} else {
 		send_spi((uint8_t)(msg->id >> 21));
-		send_spi((uint8_t) (((0x1c0000 &msg->id>>13)) | 0x08 | ((msg->id & 0x30000) >> 16)));
+		send_spi((uint8_t) (((msg->id>>13) & 0xe0) | 0x08 | ((msg->id & 0x30000) >> 16)));
 		send_spi(((uint16_t) msg->id) >> 8);
 		send_spi((uint8_t) msg->id);
 	}
@@ -203,3 +225,78 @@ uint8_t canbus_rx_status(uint8_t buffer_num) {
 	canbus_ss_high();
 	return (tmp & mask) == mask;
 }
+static uint8_t canbus_write_mask(uint8_t mask_num, uint32_t mask, uint8_t extended) {
+    uint8_t mask_reg;
+    if (mask_num == 0) 
+        mask_reg = MASK_0;
+    else if (mask_num == 1)
+        mask_reg = MASK_1;
+    else
+        return 2;
+
+   if (extended) {
+       canbus_write_reg(mask_reg, (uint8_t) (mask >> 21));
+       canbus_write_reg(mask_reg+1, (uint8_t)(((mask >> 13) & 0b11100000) |
+                    ((mask>>15) & 0b11)));
+       canbus_write_reg(mask_reg+2, (uint8_t)(mask >> 8));
+       canbus_write_reg(mask_reg+3, (uint8_t)mask);
+   } else {
+        canbus_write_reg(mask_reg, (uint8_t) (mask>>3));
+        canbus_write_reg(mask_reg+1, (uint8_t) ((mask<<5)&0b11100000));
+        canbus_write_reg(mask_reg+2, 0x00);
+        canbus_write_reg(mask_reg+3, 0x00);
+   }
+   return 1;
+}
+
+static uint8_t canbus_write_filter(uint8_t filter_num, uint32_t filter, uint8_t extended) {
+    char filter_reg;
+    switch (filter_num) {
+        case 0:
+            filter_reg = FILTER_0;
+            break;
+        case 1:
+            filter_reg = FILTER_1;
+            break;
+        case 2:
+            filter_reg = FILTER_2;
+            break;
+        case 3:
+            filter_reg = FILTER_3;
+            break;
+        case 4:
+            filter_reg = FILTER_4;
+            break;
+        case 5:
+            filter_reg = FILTER_5;
+            break;
+        default:
+            return 1;
+    }
+    if (extended) {
+        canbus_write_reg(filter_reg, (uint8_t) (filter >> 21));
+        canbus_write_reg(filter_reg+1, (uint8_t)(((filter >> 13) & 0b11100000)
+                    | ((filter>>15) & 0b11)
+                    | 0b0001000));
+        canbus_write_reg(filter_reg+2, (uint8_t)(filter >> 8));
+        canbus_write_reg(filter_reg+3, (uint8_t)filter);
+    } else {
+        canbus_write_reg(filter_reg, (uint8_t) (filter>>3));
+        canbus_write_reg(filter_reg+1, (uint8_t) ((filter<<5)&0b11100000));
+        canbus_write_reg(filter_reg+2, 0x00);
+        canbus_write_reg(filter_reg+3, 0x00);
+   }
+   return 1;
+
+}
+int8_t canbus_setup_filter(uint8_t filter_num, uint8_t extended,
+    uint32_t mask, uint32_t filter) {
+    if (filter_num>5)
+        return 2;
+
+    canbus_write_mask((filter_num < 2) ? 0: 1, mask, extended);
+    canbus_write_filter(filter_num, filter, extended); 
+    return 1;
+}
+
+

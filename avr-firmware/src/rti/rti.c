@@ -78,28 +78,18 @@ void rti_enable_screen() {
 
 //inverted logic serial bitbang transmit
 void rti_bitbang_tx(char byte_to_tx) {
-	printf("Sending: %x\n", byte_to_tx & 0xff);
 	RTI_SERIAL_TX_PORT |= (1<<RTI_SERIAL_TX_BIT);
-	printf("1");
 	rti_tx_bit_delay();
 	for (char mask= 0x01; mask; mask <<= 1)
     {
       if (byte_to_tx & mask) // choose bit
       {
       	RTI_SERIAL_TX_PORT &= ~(1<<RTI_SERIAL_TX_BIT);
-      	printf("0");
       }
       else {
       	RTI_SERIAL_TX_PORT |= (1<<RTI_SERIAL_TX_BIT);
-      	printf("1");
   	 	} 
       rti_tx_bit_delay();
     }
-   // RTI_SERIAL_TX_PORT |= (1<<RTI_SERIAL_TX_BIT);
-    //printf("1");
-    //rti_tx_bit_delay();
   	RTI_SERIAL_TX_PORT &= ~(1<<RTI_SERIAL_TX_BIT);
-  	printf("0\n");
-
-
 }

@@ -6,10 +6,12 @@
 
 #ifndef __CANBUS__H
 #define __CANBUS__H
+#include "canbus/mcp2515.h"
+
 
 typedef struct CAN_message {
 	//message data
-	char data[8];
+	uint8_t data[8];
 	//message identifier
 	uint32_t id;
 
@@ -21,13 +23,44 @@ typedef struct CAN_message {
 } CAN_MESSAGE;
 
 /**
-* Initializes CANBUS communciation.
+* Initializes CANBUS controller, places it in listen mode with default settings
+*
 * @return 1 on success, an error-code on error.
 */
 extern int canbus_init();
 
+/**
+ * Initializes CANBUS controller, leaves it in configuration mode
+ * @return 1 on success, an error code on error
+ */
+extern int8_t canbus_init_controller();
+
+/**
+ * Writes mask and filter values to appropriate CANBUS controller registers.
+ * Filters 0 and 1 share the same mask, and filters 2, 3, 4, 5 share another
+ * mask. See page 32 of MCP2515 datasheet for details.
+ * @return 1 on success, an error code on error
+ */
+extern int8_t canbus_setup_filter(uint8_t filter_num, uint8_t extended,
+    uint32_t mask, uint32_t filter);
+
+
+/** 
+ * Sets CANBUS controller into one of the following modes:
+ * LOOPBACK
+ * LISTEN
+ * SLEEP
+ * CONFIGURE
+ *
+ * @return 1 on success (verifies state of controller after issuing command),
+ * 0 otherwise
+ */
+
+extern uint8_t canbus_set_mode(uint8_t mode);
+
+
 /*
-* @return 1 on successful initialization of CAN controller
+* @return Contents of CANSTAT register 
 
 */
 extern uint8_t canbus_status_reg();
@@ -41,4 +74,5 @@ extern uint8_t canbus_write_tx_buffer(uint8_t buffer_num, CAN_MESSAGE *msg);
 
 //return 1 if there is message in buffer `buffer_num`  
 extern uint8_t canbus_rx_status(uint8_t buffer_num);
+
 #endif
