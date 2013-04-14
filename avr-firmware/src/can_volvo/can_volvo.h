@@ -1,8 +1,16 @@
 #ifndef __CAN_VOLVO__H
 #define __CAN_VOLVO__H
 
+#include "stdint.h"
+
+#define NUM_BUTTONS 12
+#define BUTTON_DATA_LEN 7
+
+#define MIN(a,b) (((a)<(b))?(a):(b))
+#define MAX(a,b) (((a)>(b))?(a):(b))
+
 typedef enum BUTTON_CODE {
-	KEY_UP = 1,
+	KEY_UP = 0,
 	KEY_DOWN,
 	KEY_LEFT,
 	KEY_RIGHT,
@@ -17,6 +25,8 @@ typedef enum BUTTON_CODE {
 } BUTTON_CODE;
 
 extern void can_volvo_init();
-extern BUTTON_CODE can_volvo_read_key();
+extern void can_volvo_step();
+
+
 
 #endif 

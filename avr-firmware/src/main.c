@@ -2,6 +2,7 @@
 
 #include <avr/io.h>
 
+#include "can_volvo/can_volvo.h"
 #include "canbus/canbus.h"
 #include "uart/uart.h"
 #include <stdio.h>
@@ -11,46 +12,30 @@
 
 uint8_t tmp;
 char tempchar;
-CAN_MESSAGE rx, tx;
+CAN_MESSAGE tx;
+uint8_t *id_ptr;
 
 int main(void) {
     uart_init();
-    canbus_init();
+    can_volvo_init();
     time_init();
     rti_init();
     printf("Init done.\n\n");
     rti_enable_screen();
-    rx.id = 0x95;
-    rx.data[0] = '1';
-    rx.data[1] = '2';
-    rx.data[2] = '3';
-
-    rx.data[3] = '4';
-    rx.data[4] = '5';
-    rx.data[5] = '6';
-    rx.data[6] = '7';
-    rx.data[7] = '8';
-
-    rx.data_len = 8;
-    rx.ext = 0;
-    canbus_write_tx_buffer(0, &rx);
-
+    tx.id = 0x040066;
+    tx.ext = 1;
+    tx.data_len = 8;
+    tx.data[0]=0x40;
+    tx.data[1]=0x00;
+    tx.data[2]=0xf5;
+    tx.data[3]=0x01;
+    tx.data[4]=0x84;
+    tx.data[5]=0xf4;
+    tx.data[6]=0x07;
+    tx.data[7]=0x00;
+    canbus_write_tx_buffer(0, &tx);
     while (1) {
-  		if (canbus_read_rx_buffer(0, &tx)>0) {
-  			printf("Received CAN message\n");
-  			printf("ID: %x\n", tx.id);
-  			printf("Data: %s\n", (char*)tx.data);
-  			printf("Len: %u\n", tx.data_len);
-  			printf("Ext: %lx\n", tx.extended_id);
-  			printf("Ext flag: %u\n", tx.ext);
-  		} else if (canbus_read_rx_buffer(1, &tx)>0) {
-  			printf("Received CAN message\n");
-  			printf("ID: %x\n", tx.id);
-  			printf("Data: %s\n", (char*)tx.data);
-  			printf("Len: %u\n", tx.data_len);
-  			printf("Ext: %lx\n", tx.extended_id);
-  			printf("Ext flag: %u\n", tx.ext);
-  		}
-  		_delay_ms(1000);
+        rti_step();
+        can_volvo_step();        
     }
-}   
+}
