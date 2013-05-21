@@ -33,7 +33,7 @@ void can_volvo_init() {
     canbus_set_mode(LOOPBACK);
 }
 static void can_button_pressed(uint8_t button_code) {
-    printf("Button press: %u\n", button_code+30);
+    printf("%u:1\n", button_code);
 }
 
 static void can_parse_message(CAN_MESSAGE * msg) {
