@@ -1,6 +1,7 @@
 
 
 #include <avr/io.h>
+#include "config.h"
 
 #include "can_volvo/can_volvo.h"
 #include "canbus/canbus.h"

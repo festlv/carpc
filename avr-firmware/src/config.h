@@ -17,4 +17,9 @@
 #define CANBUS_CS_DDR DDRC
 #define CANBUS_CS_PORT PORTC
 #define CANBUS_CS_BIT PC0
+
+#define RELAY_DDR DDRC
+#define RELAY_PORT PORTC
+#define RELAY_BIT PC3
+
 #endif

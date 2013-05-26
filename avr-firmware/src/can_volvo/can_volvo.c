@@ -1,3 +1,5 @@
+#include "config.h"
+#include <util/delay.h>
 #include "can_volvo/can_volvo.h"
 #include "canbus/canbus.h"
 #include <stdio.h>
@@ -25,12 +27,21 @@ uint8_t keymap[NUM_BUTTONS][BUTTON_DATA_LEN] = {
 
 
 static CAN_MESSAGE can_received_message;
+static inline void relay_on() {
+    RELAY_PORT |= (1<<RELAY_BIT);
+}
+
+static inline void relay_off() {
+    RELAY_PORT &= ~(1<<RELAY_BIT);
+}
 
 void can_volvo_init() {
     canbus_init_controller();
     canbus_setup_filter(0, 1, 0xFFFFFFFF, button_message_id);
     canbus_setup_filter(2, 1, 0xFFFFFFFF, heartbeat_message_id);
     canbus_set_mode(LOOPBACK);
+    RELAY_DDR |= 1<<RELAY_BIT;
+    relay_on();
 }
 static void can_button_pressed(uint8_t button_code) {
     printf("Button press: %u\n", button_code+30);
