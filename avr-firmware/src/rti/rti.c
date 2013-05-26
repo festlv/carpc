@@ -21,7 +21,7 @@ static uint8_t current_byte=0;
 //delay between bits.
 //it should actually be 416, but since interrupts take their time,
 //the value needs to be lower
-const int rti_bit_delay = 401;
+const int rti_bit_delay = 405;
 
 static uint32_t rti_step_time=0;
 
