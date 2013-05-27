@@ -1,21 +1,13 @@
-All data is in hex
+00400066:7b40401f000000 vol down
+00400066:7740401f000000 vol up
+00400066:7d40401f000000 ff
+00400066:7e40401f000000 reverse
+00400066:6f40401f000000 yes
+00400066:5f40401f000000 no
+00400066:7f50401f000000 back
+00400066:7f60401f000000 enter
+00400066:7f48401f000000 up
+00400066:7f44401f000000 down
+00400066:7f41401f000000 right
+00400066:7f42401f000000 left
 
-Button message ID: 040066
-
-Buutton         Data
-Enter           7F60401F300C0
-Back            7F50401F60080
-Up              7F48401F50040
-Down            7F44401F300C0
-Left            7F42401F60080
-Right           7F41401F20080
-Forward         7D40401F10040
-Backward        7E40401F20080
-Vol up          7740401F300C0
-Vol down        7B40401F20080
-Yes             6F40401F60080
-No              5F40401F300C0
-
-
-Random message ID which to look for when ignition is on (so that we can wake up and power down gracefully):
-140044A
