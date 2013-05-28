@@ -27,7 +27,10 @@ class SerialReader(threading.Thread):
         try:
             while not self._stop.isSet():
                 line = self._serial.readline()
-
+                if line[0] == '#':
+                    #received a comment line
+                    print line
+                    continue
                 split = [i.strip() for i in line.split(':')]
                 if len(split) == 2:
                     print "Received: %s" % line

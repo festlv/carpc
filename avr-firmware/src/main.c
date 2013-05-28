@@ -21,7 +21,7 @@ int main(void) {
     can_volvo_init();
     time_init();
     rti_init();
-    printf("Init done.\n\n");
+    printf("#Init done.\n\n");
     rti_enable_screen();
     while (1) {
         rti_step();
