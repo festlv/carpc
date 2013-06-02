@@ -18,11 +18,11 @@ uint8_t *id_ptr;
 
 int main(void) {
     uart_init();
-    can_volvo_init();
     time_init();
     rti_init();
+    can_volvo_init();
     printf("#Init done.\n\n");
-    rti_enable_screen();
+
     while (1) {
         rti_step();
         can_volvo_step();        

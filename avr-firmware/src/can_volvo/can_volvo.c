@@ -2,12 +2,17 @@
 #include <util/delay.h>
 #include "can_volvo/can_volvo.h"
 #include "canbus/canbus.h"
+#include "rti/rti.h"
 
 #include "time/time.h"
 #include <stdio.h>
 #include <string.h>
 
 uint32_t button_seen_time[NUM_BUTTONS];
+
+static uint8_t relay_state = 0;
+static uint8_t user_poweroff = 0;
+static uint8_t ignition_state = 1;
 
 const uint32_t button_message_id = 0x00400066;//0x00400066;//0x660400;
 
@@ -40,13 +45,31 @@ uint8_t keymap[NUM_BUTTONS][BUTTON_DATA_LEN] = {
 const uint8_t BUTTON_TIMEOUT = 100;
 
 
+static uint32_t back_button_start_time=0;
+
 static CAN_MESSAGE can_received_message;
+
 static inline void relay_on() {
     RELAY_PORT |= (1<<RELAY_BIT);
+    relay_state = 1;
 }
 
 static inline void relay_off() {
     RELAY_PORT &= ~(1<<RELAY_BIT);
+    relay_state = 0;
+}
+
+static void poweroff_event() {
+    if (relay_state) {
+        printf("power_off\n");
+        rti_disable_screen();
+        _delay_ms(1000 * 10);
+        relay_off();
+    } else {
+        printf("#power_on\n");
+        relay_on();
+        rti_enable_screen();
+    }
 }
 
 void can_volvo_init() {
@@ -58,19 +81,39 @@ void can_volvo_init() {
 
     canbus_set_mode(LISTEN);
     RELAY_DDR |= 1<<RELAY_BIT;
-    relay_on();
+    poweroff_event();
+    rti_set_brightness(15);
 }
+
 static void can_button_pressed(uint8_t button_code) {
     if (button_seen_time[button_code] == 0) {
         printf("%u:1\n", button_code);
+        if (button_code==KEY_BACK)
+            back_button_start_time = time_ms();
     }
+
     button_seen_time[button_code] = time_ms();
 }
+
+
+
 static void can_button_released(uint8_t button_code) {
-    printf("%u:2\n", button_code);
+    printf("%u:0\n", button_code);
     button_seen_time[button_code] = 0;
+    if (button_code==KEY_BACK) {
+        if (time_ms() - back_button_start_time > BACK_BUTTON_POWEROFF_TIME) {
+            user_poweroff = 1;
+            poweroff_event();             
+        }
+    }
 }
 static void can_parse_message(CAN_MESSAGE * msg) {
+    if (ignition_state == 0 && relay_state == 0 && user_poweroff == 0) {
+        printf("#ignition_on\n");
+        poweroff_event();
+    }
+
+    ignition_state = 1;
     if (msg->id == button_message_id) {
         //naive comparison if data matches any of the buttons
         
@@ -90,7 +133,8 @@ static void can_parse_message(CAN_MESSAGE * msg) {
 
 void can_volvo_step() {
     int8_t buf_num=-1;
-    
+    static uint32_t last_message_timestamp = 0;
+
     if (canbus_rx_status(0)) {
         buf_num = 0; 
     } else if (canbus_rx_status(1)) {
@@ -98,6 +142,7 @@ void can_volvo_step() {
     }
 
     if (buf_num!=-1 && canbus_read_rx_buffer(buf_num, &can_received_message) >0 ) {
+        last_message_timestamp = time_ms();
         can_parse_message(&can_received_message);
     }
 
@@ -108,6 +153,14 @@ void can_volvo_step() {
                 (button_seen_time[i] + BUTTON_TIMEOUT< now)) {
             can_button_released(i);
         }            
+    }
+    if (last_message_timestamp != 0 && now > last_message_timestamp && 
+            (now - last_message_timestamp) > NO_CAN_MESSAGE_POWEROFF_TIME 
+            && relay_state == 1) {
+        printf("#ignition_off\n");
+        printf("lts: %ld, now: %ld\n", last_message_timestamp, now);
+        poweroff_event();
+        ignition_state = 0;
     }
 }
 

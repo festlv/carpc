@@ -9,6 +9,9 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
+#define BACK_BUTTON_POWEROFF_TIME 2000
+#define NO_CAN_MESSAGE_POWEROFF_TIME 30000
+
 typedef enum BUTTON_CODE {
 	KEY_UP = 0,
 	KEY_DOWN,

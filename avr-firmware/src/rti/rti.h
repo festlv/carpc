@@ -17,7 +17,8 @@ For more information see: http://translate.googleusercontent.com/translate_c?dep
 */
 
 extern void rti_init();
-
+//brightness level, number between 0 and 15, inclusive, 0 being the least
+//brightest
 extern void rti_set_brightness(uint8_t level);
 
 extern void rti_disable_screen();
