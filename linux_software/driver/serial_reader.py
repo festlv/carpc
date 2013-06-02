@@ -1,6 +1,6 @@
 import serial
 import threading
-
+import time
 BAUD_RATE = 115200
 
 
@@ -27,7 +27,7 @@ class SerialReader(threading.Thread):
         try:
             while not self._stop.isSet():
                 line = self._serial.readline()
-                if line[0] == '#':
+                if len(line)==0 or line[0] == '#':
                     #received a comment line
                     print line
                     continue
@@ -36,5 +36,6 @@ class SerialReader(threading.Thread):
                     print "Received: %s" % line
                     keycode, typ = split
                     self._queue.put((keycode, int(typ)))
+                time.sleep(0.2)
         except KeyboardInterrupt:
             pass
