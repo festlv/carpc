@@ -4,7 +4,7 @@
 #include "stdint.h"
 
 #define NUM_BUTTONS 12
-#define BUTTON_DATA_LEN 7
+#define BUTTON_DATA_LEN 2
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))

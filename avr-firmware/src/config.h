@@ -22,4 +22,7 @@
 #define RELAY_PORT PORTC
 #define RELAY_BIT PC3
 
+//define this to receive CANBUS data via serial console
+//#define CANBUS_LOGGING_MODE 1
+
 #endif
