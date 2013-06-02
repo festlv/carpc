@@ -6,22 +6,27 @@ build.
 * **avr-firmware/** contains firmware which is running on Atmega 328p
   microcontroller. It requires avr-gcc, avr-binutils and scons.
   Sample usage:
-     `scons upload`
+
+     ```scons upload```
+
   Flashes the microcontroller (assumes usbasp programmer connected).
 
 * **linux_software/** folder contains userspace driver which passes keypresses
   from serial port to uinput. Requires python2.7, pyserial and evdev
   Sample usage:
+  ```bash
      virtualenv .env
      source .env/bin/activate
      pip install -r requirements.txt
      python driver.py /dev/ttyAMA0
+    ```
    Runs the input driver which expects that microcontroller is connected to
    /dev/ttyAMA0 (serial port on RasPi).
 
 
 For more information, please see: http://wot.lv/category/rpi-carpc.html
 
+```
 ------------------------------------------------------------------------------
 Copyright (c) 2013 Reinis Veips. 
 
@@ -50,3 +55,4 @@ OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+```
