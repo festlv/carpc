@@ -1,4 +1,5 @@
 import argparse
+import time
 from button_map import BUTTONS
 from serial_reader import SerialReader
 from serial_uinput import Input
@@ -10,7 +11,7 @@ def main():
     parser.add_argument("port", help="Serial port to listen for events.")
     args = parser.parse_args()
     inp = Input()
-
+    time.sleep(5)
     q = Queue()
     s = SerialReader(args.port, q)
     s.start()
