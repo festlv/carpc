@@ -1,4 +1,5 @@
-Title: RaspberryPi based CarPC.
+RaspberryPi based CarPC.
+===========================
 
 
 This repository hosts firmware and software for my RaspberryPi based CarPC
