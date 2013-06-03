@@ -11,3 +11,9 @@
 00400066:7f41401f000000 right
 00400066:7f42401f000000 left
 
+
+Brightness control: yy- irrelevant
+xx- single relevant byte. 10 - lowest level
+1d- highest
+02e10df4:yy a9 yy yy yy f8 xx
+
