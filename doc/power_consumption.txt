@@ -1,0 +1,11 @@
+All measurements are on 12V incoming line.
+
+RasPi fully booted, wifi and USB dongle connected and running:
+0.35A
+
+5V power to Rpi and USB cut off-
+22mA
+
+5V power to rpi cut off, mcp2515 in sleep mode:
+20mA
+

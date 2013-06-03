@@ -14,7 +14,8 @@ static uint8_t relay_state = 0;
 static uint8_t user_poweroff = 0;
 static uint8_t ignition_state = 1;
 
-const uint32_t button_message_id = 0x00400066;//0x00400066;//0x660400;
+const uint32_t button_message_id = 0x00400066;
+const uint32_t brightness_message_id = 0x02e10df4;
 
 //Keypress events are sent as canbus messages in the following format (xx and
 //yy are single byte values):
@@ -77,12 +78,13 @@ void can_volvo_init() {
 
     #ifndef CANBUS_LOGGING_MODE
         canbus_setup_filter(0, 1, 0xFFFFFFFF, button_message_id);
+        canbus_setup_filter(1, 1, 0xFFFFFFFF, brightness_message_id);
     #endif 
 
     canbus_set_mode(LISTEN);
     RELAY_DDR |= 1<<RELAY_BIT;
     poweroff_event();
-    rti_set_brightness(15);
+    rti_set_brightness(8);
 }
 
 static void can_button_pressed(uint8_t button_code) {
@@ -108,6 +110,7 @@ static void can_button_released(uint8_t button_code) {
     }
 }
 static void can_parse_message(CAN_MESSAGE * msg) {
+    #ifndef CANBUS_LOGGING_MODE
     if (ignition_state == 0 && relay_state == 0 && user_poweroff == 0) {
         printf("#ignition_on\n");
         poweroff_event();
@@ -123,6 +126,14 @@ static void can_parse_message(CAN_MESSAGE * msg) {
                 can_button_pressed(btn_idx);
         }
     } 
+    else if (msg->id == brightness_message_id) {
+        //last byte of message contains brightness level
+        uint8_t tmp = msg->data[msg->data_len - 1] - 0x10;
+        if (tmp >=0 && tmp <= 13) {
+            rti_set_brightness(tmp+2);
+        }
+    }
+    #endif
     #ifdef CANBUS_LOGGING_MODE 
         printf("%08lx:", msg->id);
         for (int8_t i=0;i<msg->data_len ;i++)
