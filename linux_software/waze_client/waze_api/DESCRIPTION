@@ -1,0 +1,53 @@
+Description of Waze protocol, as little as I needed to gather to show alerts in my CarPC...
+
+All requests are sent via HTTP, to http://rt.waze.com/rtserver/*
+
+Everything begins with a login request:
+
+POST request to http://rt.waze.com/rtserver/login
+Data format is not the usual form-urlencoded, but it's just sent like this:
+Login,1,username,password,4,5,6,7,8,9
+
+I haven't looked deeply at other parameters except username and password. Waze developers will probably be cursing at me for polluting their DB's with wrong information- but hey, they are the one's not documenting their "open source" app.
+
+This request returns something along these lines:
+
+RC,200,OK
+LoginSuccessful,350366185,PRejpawErfntCQLr
+
+We're interested in last two data items- login id, and server cookie.
+
+
+Example conversation:
+
+➜  waze_android_src_2.4  curl -v http://rt.waze.com/rtserver/login --data Login,1,festlv,waze123,1,2,3,4,5,6
+* Adding handle: conn: 0x91b7470
+* Adding handle: send: 0
+* Adding handle: recv: 0
+* Curl_addHandleToPipeline: length: 1
+* - Conn 0 (0x91b7470) send_pipe: 1, recv_pipe: 0
+* About to connect() to rt.waze.com port 80 (#0)
+*   Trying 174.129.223.127...
+* Connected to rt.waze.com (174.129.223.127) port 80 (#0)
+> POST /rtserver/login HTTP/1.1
+> User-Agent: curl/7.30.0
+> Host: rt.waze.com
+> Accept: */*
+>Content-Length: 34
+>Content-Type: application/x-www-form-urlencoded
+
+* upload completely sent off: 34 out of 34 bytes
+< HTTP/1.1 200 OK
+* Server nginx/0.7.60ack is not blacklisted
+< Server: nginx/0.7.60ack
+< Date: Fri, 07 Jun 2013 21:45:44 GMT
+< Content-Type: text/plain
+< Connection: keep-alive
+< Set-Cookie: rtserver-id=2
+< Content-Length: 53
+<
+RC,200,OK
+LoginSuccessful,350366185,PRejpawErfntCQLr
+* Connection #0 to host rt.waze.com left intact
+
+

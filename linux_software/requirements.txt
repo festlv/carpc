@@ -1,0 +1,4 @@
+evdev==0.3.2
+pyserial==2.6
+requests==1.2.3
+wsgiref==0.1.2
