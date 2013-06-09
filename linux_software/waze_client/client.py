@@ -129,7 +129,7 @@ class WazeClient():
 
         distance_text = "%.1f km" % round(alert['distance'], 1)
         timestamp_text = self._prepare_timestamp(alert)
-        right_text =  "| %s | %s" % (timestamp_text.rjust(8),
+        right_text =  "|%s|%s" % (timestamp_text.rjust(6),
                                      distance_text.rjust(7))
 
         text = text.ljust(cols - 1)

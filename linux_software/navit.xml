@@ -1618,13 +1618,13 @@ Waypoint</text></img>
 					<circle color="#000000" radius="3" text_size="7"/>
 				</itemgra>
 				<itemgra item_types="highway_city,highway_land,street_4_city,street_4_land,street_n_lanes,living_street" order="10-18">
-					<text text_size="8"/>
+					<text text_size="10"/>
 				</itemgra>
 				<itemgra item_types="street_2_city,street_2_land,street_3_city,street_3_land,ramp" order="11-18">
-					<text text_size="9"/>
+					<text text_size="14"/>
 				</itemgra>
 				<itemgra item_types="street_nopass,street_0,street_1_city,street_1_land,footway" order="12-18">
-					<text text_size="9"/>
+					<text text_size="15"/>
 				</itemgra>
 				<itemgra item_types="traffic_distortion" order="2">
 					<polyline color="#ff9000" width="2"/>
