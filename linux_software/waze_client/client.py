@@ -13,7 +13,7 @@ class WazeClient():
         self.gps_t.setDaemon(True)
         self.gps_t.start()
 
-        self.waze_t = WazeUpdaterThread(update_interval=1, max_age=3600)
+        self.waze_t = WazeUpdaterThread(update_interval=60, max_age=3600)
         self.waze_t.setDaemon(True)
         self.waze_t.start()
         locale.setlocale(locale.LC_ALL, '')
