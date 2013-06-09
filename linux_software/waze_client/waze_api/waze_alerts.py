@@ -82,7 +82,8 @@ def normalize_alerts(json_resp, fix):
 
     alerts = []
     nowdt = long(datetime.datetime.now().strftime("%s"))
-
+    if not json_resp['alerts']:
+        return alerts 
     for alert in json_resp['alerts']:
         c = alert.get('city', '')
         if ',' in c:
