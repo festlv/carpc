@@ -15,6 +15,8 @@ class GpsThread(threading.Thread):
                 gpsd.next()
             except gps.client.json_error:
                 pass  # fvz
+            except StopIteration:
+                time.sleep(10)
             time.sleep(1)
             if gpsd.fix.latitude != 0:
                 with self._fix_lock:
