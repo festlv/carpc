@@ -30,7 +30,10 @@ class WazeClient():
     def initscr(self, stdscr):
         #use terminal color theme
         curses.use_default_colors()
-        curses.curs_set(0)
+        try:
+            curses.curs_set(0)
+        except:
+            pass
         size = stdscr.getmaxyx()
         status_height = 1
         self._status_win = stdscr.subwin(size[0] - status_height, 0)

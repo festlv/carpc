@@ -8,7 +8,7 @@ BUTTONS = {
     '4': e.KEY_ENTER,
     '5': e.KEY_BACKSPACE,  # back key
     '6': e.KEY_J,  # yes
-    '7': e.KEY_K,  # no
+    '7': e.KEY_LEFTSHIFT,  # no
     '8': e.KEY_VOLUMEUP,
     '9': e.KEY_VOLUMEDOWN,
     '10': e.KEY_NEXT,
