@@ -5,11 +5,13 @@ Uses http://world.waze.com/widget/?lat=56.9115&lon=24.1372&radius_km=50
 """
 
 import requests
-from math import radians, cos, asin, sin, atan2, degrees
+import datetime
+import json
+from math import radians, cos, asin, sin, atan2, degrees, sqrt
 
 
 URL = "http://world.waze.com/rtserver/web/GeoRSS?format=JSON&types= \
-traffic%%2Calerts&mj=10&ma=%(num_alerts)s&jmds=120&jmu=1&left=%(left)f \
+traffic%%2Calerts&mj=1&ma=%(num_alerts)s&jmds=120&jmu=1&left=%(left)f \
 &right=%(right)f&bottom=%(bottom)f&top=%(top)f&bo=true"
 
 
@@ -63,6 +65,40 @@ def get_radius_coordinates(lat, lon, radius):
     return ((lat1, lon1), (lat2, lon2))
 
 
+def _dist(coords, fix):
+    R = 6371.0  # km
+    dLat = radians(coords[0] - fix[0])
+    dLon = radians(coords[1] - fix[1])
+    lat1 = radians(fix[0])
+    lat2 = radians(coords[0])
+
+    a = sin(dLat / 2) * sin(dLat / 2) + \
+        sin(dLon / 2) * sin(dLon / 2) * cos(lat1) * cos(lat2)
+
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    return R * c
+
+def normalize_alerts(json_resp, fix):
+
+    alerts = []
+    nowdt = long(datetime.datetime.now().strftime("%s"))
+
+    for alert in json_resp['alerts']:
+        c = alert.get('city', '')
+        if ',' in c:
+            c = c.split(',')[0]
+            alert['city'] = c
+        dist = _dist(
+            (alert['location']['y'], alert['location']['x']),
+            fix)
+        alert['distance'] = dist
+        alert['deltaT'] = nowdt - (alert['pubMillis'] / 1000)
+        alerts.append(alert)
+
+
+    return alerts
+
+
 def get_alerts(lat, lon, radius=30, num_alerts=50):
     """
     Returns up to num_alerts from lat/lon coordinates and radius in km
@@ -87,8 +123,10 @@ def get_alerts(lat, lon, radius=30, num_alerts=50):
                             'top': c_box[1][0], 'bottom': c_box[0][0],
                             'num_alerts': num_alerts})
 
-    json_resp = r.json()
-    return json_resp['alerts']
+    ustr = r.content.decode('utf-8')
+    json_resp = json.loads(ustr)
+
+    return normalize_alerts(json_resp, (lat, lon))
 
 if __name__ == "__main__":
     alerts = get_alerts(56.953113, 24.116364)
