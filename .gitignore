@@ -5,3 +5,5 @@
 avr-firmware/build/*
 */.env
 .env
+hardware/*.bak
+hardware/*-cache.lib
