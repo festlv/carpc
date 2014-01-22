@@ -7,3 +7,5 @@ avr-firmware/build/*
 .env
 hardware/*.bak
 hardware/*-cache.lib
+hardware/*.bck
+hardware/*-bak
