@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-may-18)-stable date = ceturtdiena, 2014. gada 23. janvāris, plkst. 00 un 29
+Cmp-Mod V01 Created by CvPcb (2013-may-18)-stable date = Fri 24 Jan 2014 05:20:30 PM EET
 
 BeginCmp
 TimeStamp = /52DED234;
@@ -95,7 +95,7 @@ BeginCmp
 TimeStamp = /52DEEBA8;
 Reference = D2;
 ValeurCmp = LED;
-IdModule  = LED-5MM;
+IdModule  = LED-3MM;
 EndCmp
 
 BeginCmp
@@ -172,7 +172,7 @@ BeginCmp
 TimeStamp = /52DEE3E4;
 Reference = Q1;
 ValeurCmp = BC547;
-IdModule  = TO92;
+IdModule  = TO92-CBE;
 EndCmp
 
 BeginCmp
@@ -186,7 +186,7 @@ BeginCmp
 TimeStamp = /52DEDDBD;
 Reference = Q3;
 ValeurCmp = BC547;
-IdModule  = TO92;
+IdModule  = TO92-CBE;
 EndCmp
 
 BeginCmp
@@ -319,14 +319,14 @@ BeginCmp
 TimeStamp = /52DED442;
 Reference = X1;
 ValeurCmp = CRYSTAL;
-IdModule  = C2;
+IdModule  = XTAL;
 EndCmp
 
 BeginCmp
 TimeStamp = /52DED70C/52E01797;
 Reference = X2;
 ValeurCmp = CRYSTAL;
-IdModule  = C2;
+IdModule  = XTAL;
 EndCmp
 
 EndListe

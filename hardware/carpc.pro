@@ -1,6 +1,6 @@
-update=trešdiena, 2014. gada 22. janvāris, plkst. 23 un 01
+update=Fri 24 Jan 2014 05:08:33 PM EET
 version=1
-last_client=pcbnew
+last_client=cvpcb
 [general]
 version=1
 [eeschema]
@@ -44,32 +44,26 @@ LibName29=contrib
 LibName30=valves
 LibName31=/home/reinis/projects/thc/doors
 LibName32=mcp_can
-[cvpcb]
-version=1
-NetIExt=net
-[cvpcb/libraries]
-EquName1=devcms
 [pcbnew]
 version=1
-LastNetListRead=
+LastNetListRead=carpc.net
 UseCmpFile=1
-PadDrill="    0,600000"
-PadDrillOvalY="    0,600000"
-PadSizeH="    1,000000"
-PadSizeV="    1,000000"
-PcbTextSizeV="    1,000000"
-PcbTextSizeH="    1,000000"
-PcbTextThickness="    0,300000"
-ModuleTextSizeV="    1,000000"
-ModuleTextSizeH="    1,000000"
-ModuleTextSizeThickness="    0,150000"
-SolderMaskClearance="    0,000000"
-SolderMaskMinWidth="    0,000000"
-DrawSegmentWidth="    0,200000"
-BoardOutlineThickness="    0,150000"
-ModuleOutlineThickness="    0,150000"
+PadDrill="    0.800000"
+PadDrillOvalY="    0.800000"
+PadSizeH="    2.000000"
+PadSizeV="    2.000000"
+PcbTextSizeV="    1.000000"
+PcbTextSizeH="    1.000000"
+PcbTextThickness="    0.300000"
+ModuleTextSizeV="    1.000000"
+ModuleTextSizeH="    1.000000"
+ModuleTextSizeThickness="    0.150000"
+SolderMaskClearance="    0.000000"
+SolderMaskMinWidth="    0.000000"
+DrawSegmentWidth="    0.200000"
+BoardOutlineThickness="    0.150000"
+ModuleOutlineThickness="    0.150000"
 [pcbnew/libraries]
-LibDir=/home/reinis/projects/kicad-common
 LibName1=modules
 LibName2=sockets
 LibName3=connect
@@ -87,3 +81,9 @@ LibName14=led
 LibName15=dip_sockets
 LibName16=pga_sockets
 LibName17=valves
+LibDir=/home/reinis/projects/kicad-common
+[cvpcb]
+version=1
+NetIExt=net
+[cvpcb/libraries]
+EquName1=devcms

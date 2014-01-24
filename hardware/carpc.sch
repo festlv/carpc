@@ -31,14 +31,13 @@ LIBS:contrib
 LIBS:valves
 LIBS:doors
 LIBS:mcp_can
-LIBS:carpc-cache
 EELAYER 27 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 2
 Title ""
-Date "22 jan 2014"
+Date "24 jan 2014"
 Rev ""
 Comp ""
 Comment1 ""
@@ -439,10 +438,10 @@ Text GLabel 7200 1650 2    60   Input ~ 0
 CAN_CS
 Text GLabel 6250 2000 2    60   Input ~ 0
 CAN_RESET
-Text GLabel 6000 2950 2    60   Input ~ 0
+Text GLabel 6000 3150 2    60   Input ~ 0
 CAN_STBY
 Wire Wire Line
-	6000 2950 5700 2950
+	6000 3150 5700 3150
 $Comp
 L BC547 Q3
 U 1 1 52DEDDBD
@@ -584,10 +583,8 @@ Wire Notes Line
 	2550 3100 2550 600 
 Text Notes 800  3050 0    60   ~ 0
 Power input and regulation
-Text GLabel 6600 3050 2    60   Input ~ 0
+Text GLabel 7050 3800 2    60   Input ~ 0
 CAN_WAKE
-Wire Wire Line
-	5700 3050 6600 3050
 Wire Wire Line
 	5700 4100 7100 4100
 Text Label 6600 4100 0    60   ~ 0
@@ -897,9 +894,9 @@ Text Notes 2750 4350 2    60   ~ 0
 MELBUS signals for head unit
 Wire Wire Line
 	5700 3900 7050 3900
-Text Label 6600 3900 0    60   ~ 0
+Text Label 6600 4200 0    60   ~ 0
 MB_BUSY
-Text Label 6600 3800 0    60   ~ 0
+Text Label 6600 3900 0    60   ~ 0
 MB_DATA
 Wire Wire Line
 	7050 3800 5700 3800
@@ -909,9 +906,7 @@ Text Label 6600 3700 0    60   ~ 0
 MB_CLK
 Connection ~ 850  1650
 Connection ~ 1200 1650
-NoConn ~ 5700 3150
 NoConn ~ 5700 3250
-NoConn ~ 5700 4200
 Connection ~ 2250 1650
 Wire Wire Line
 	8850 6050 9050 6050
@@ -993,4 +988,9 @@ Wire Wire Line
 	6250 2000 5700 2000
 NoConn ~ 5700 2750
 NoConn ~ 5700 2850
+Wire Wire Line
+	5700 4200 7100 4200
+NoConn ~ 5700 2950
+NoConn ~ 5700 3050
+NoConn ~ 13150 3600
 $EndSCHEMATC
