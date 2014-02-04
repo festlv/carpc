@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-may-18)-stable date = Fri 24 Jan 2014 05:20:30 PM EET
+Cmp-Mod V01 Created by CvPcb (2013-may-18)-stable date = Tue 04 Feb 2014 03:39:45 PM EET
 
 BeginCmp
 TimeStamp = /52DED234;
@@ -172,7 +172,7 @@ BeginCmp
 TimeStamp = /52DEE3E4;
 Reference = Q1;
 ValeurCmp = BC547;
-IdModule  = TO92-CBE;
+IdModule  = TO92-EBC;
 EndCmp
 
 BeginCmp
@@ -186,7 +186,7 @@ BeginCmp
 TimeStamp = /52DEDDBD;
 Reference = Q3;
 ValeurCmp = BC547;
-IdModule  = TO92-CBE;
+IdModule  = TO92-EBC;
 EndCmp
 
 BeginCmp

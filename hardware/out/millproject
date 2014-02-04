@@ -1,0 +1,32 @@
+# this is an example config file for pcb2gcode.
+# place this in the same directory as your gerber files to save typing
+
+# You may want to uncomment and change those in local project files
+back=carpc-B_Cu.gbl
+drill=carpc.drl
+#outline=isolator-Edge_Cuts.gbr
+# parameters for isolation routing / engraving / etching
+zwork=-0.1
+zsafe=1
+zchange=25
+mill-feed=100
+mill-speed=30000
+extra-passes=1
+#drill-front=1
+metric=1
+offset=0.12
+
+zcut=-0.5
+cutter-diameter=3.175
+cut-feed=200
+cut-speed=10000
+cut-infeed=2
+# parameters for cutting out boards
+#drill-front=1
+# drilling parameters
+zdrill=-3
+drill-feed=300
+drill-speed=20000
+smooth=1
+dpi=4000
+#mirror-absolute=1
