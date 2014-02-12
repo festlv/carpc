@@ -10,17 +10,17 @@
 #define RTI_SERIAL_TX_BIT PB0
 
 
-#define CANBUS_RESET_DDR DDRC
-#define CANBUS_RESET_PORT PORTC
-#define CANBUS_RESET_BIT PC1
+#define CANBUS_RESET_DDR DDRB
+#define CANBUS_RESET_PORT PORTB
+#define CANBUS_RESET_BIT PB1
 
-#define CANBUS_CS_DDR DDRC
-#define CANBUS_CS_PORT PORTC
-#define CANBUS_CS_BIT PC0
+#define CANBUS_CS_DDR DDRB
+#define CANBUS_CS_PORT PORTB
+#define CANBUS_CS_BIT PB2
 
-#define RELAY_DDR DDRC
-#define RELAY_PORT PORTC
-#define RELAY_BIT PC3
+#define RELAY_DDR DDRD
+#define RELAY_PORT PORTD
+#define RELAY_BIT PD6
 
 //define this to receive CANBUS data via serial console
 //#define CANBUS_LOGGING_MODE 1

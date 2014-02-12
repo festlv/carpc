@@ -82,7 +82,7 @@ void can_volvo_init() {
     #endif 
 
     canbus_set_mode(LISTEN);
-    RELAY_DDR |= 1<<RELAY_BIT;
+    RELAY_DDR |= 2<<RELAY_BIT;
     poweroff_event();
     rti_set_brightness(8);
 }

@@ -50,7 +50,7 @@ Default(env.Command(None, TARGET + '.elf', env['SIZE'] + ' -C --mcu=' + DEVICE +
 
 
 # avrdude settings
-env.Append(AVRDUDE_BASE = 'avrdude -c usbasp -p %s' % (DEVICE))
+env.Append(AVRDUDE_BASE = 'avrdude -c arduino -b 57600 -v -P /dev/ttyUSB* -D  -p %s' % (DEVICE))
 
 env.Append(LFUSE = '0xff')
 env.Append(HFUSE = '0xda')

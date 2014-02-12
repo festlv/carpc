@@ -28,7 +28,7 @@ def read_fuses(target, source, env):
 
 def write_fuses(target, source, env):
 	fuse_write_command = "%(command)s -qq -u -U lfuse:w:%(lfuse)s:m -U hfuse:w:%(hfuse)s:m -U efuse:w:%(efuse)s:m" % \
-						{'command': env["AVRDUDE_BASE"], 'lfuse': env["LFUSE"], 
+						{'command': env["AVRDUDE_BASE"], 'lfuse': env["LFUSE"],
 						'hfuse':env["HFUSE"],'efuse':env["EFUSE"]}
 
 	return_code = subprocess.call(fuse_write_command, shell=True)
@@ -41,7 +41,7 @@ def write_fuses(target, source, env):
 
 def upload_hex(target, source, env):
 
-	upload_command = "%s -q -U flash:w:%s" % (env['AVRDUDE_BASE'], source[0].path)
+	upload_command = "%s -U flash:w:%s" % (env['AVRDUDE_BASE'], source[0].path)
 	return subprocess.call(upload_command, shell=True)
 
 
