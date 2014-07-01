@@ -4,6 +4,11 @@
 
 #include <avr/io.h>
 
+//#define CANBUS_ENABLED 1
+
+//#define RTI_ENABLED 1
+
+#define MELBUS_ENABLED 1
 
 #define RTI_SERIAL_TX_DDR DDRB
 #define RTI_SERIAL_TX_PORT PORTB

@@ -129,7 +129,7 @@ static void can_parse_message(CAN_MESSAGE * msg) {
     else if (msg->id == brightness_message_id) {
         //last byte of message contains brightness level
         uint8_t tmp = msg->data[msg->data_len - 1] - 0x10;
-        if (tmp >=0 && tmp <= 13) {
+        if (tmp <= 13) {
             rti_set_brightness(tmp+2);
         }
     }

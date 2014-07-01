@@ -23,6 +23,9 @@ CPU_FREQUENCY = '16000000UL' # Hz
 # Set environment for an Atmel AVR Atmega 328p microcontroller.
 # Create and initialize the environment.
 env.Append(CCFLAGS = '-mmcu=' + DEVICE)
+
+#enable all warnings and be anal about them
+env.Append(CCFLAGS = '-Wall -Wextra')
 env.Append(LINKFLAGS = '-mmcu=' + DEVICE)
 env.Append(LINKFLAGS = '-Wl,-u,vfprintf')
 env.Append(LINKFLAGS = '-lprintf_flt ')
@@ -50,7 +53,7 @@ Default(env.Command(None, TARGET + '.elf', env['SIZE'] + ' -C --mcu=' + DEVICE +
 
 
 # avrdude settings
-env.Append(AVRDUDE_BASE = 'avrdude -c arduino -b 57600 -v -P /dev/ttyUSB* -D  -p %s' % (DEVICE))
+env.Append(AVRDUDE_BASE = 'avrdude -c arduino -b 57600 -v -P /dev/ttyACM1 -D  -p %s' % (DEVICE))
 
 env.Append(LFUSE = '0xff')
 env.Append(HFUSE = '0xda')

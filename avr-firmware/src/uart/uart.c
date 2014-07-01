@@ -1,11 +1,17 @@
 #include <avr/io.h>
 
 #include "uart.h"
-
 #ifndef BAUD
 #define BAUD 115200 
 #endif
+
+//ignore the warning about baud rate
+#pragma GCC diagnostic warning "-Wcpp"
+#pragma GCC diagnostic push
 #include <util/setbaud.h>
+#pragma GCC diagnostic pop
+
+#define UNUSED(x) (void)(x)
 
 /* http://www.cs.mun.ca/~rod/Winter2007/4723/notes/serial/serial.html */
 
@@ -34,12 +40,16 @@ void uart_init(void) {
 }
 
 int uart_putchar(char c, FILE *stream) {
-    UDR0 = c;
+    UNUSED(stream);
+
     loop_until_bit_is_set(UCSR0A, UDRE0);
+    UDR0 = c;
     return 0;
 }
 
 int uart_getchar(FILE *stream) {
+    UNUSED(stream);
+
     loop_until_bit_is_set(UCSR0A, RXC0);
     return UDR0;
 }
