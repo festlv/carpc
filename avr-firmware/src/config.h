@@ -4,11 +4,11 @@
 
 #include <avr/io.h>
 
-//#define CANBUS_ENABLED 1
+#define CANBUS_ENABLED 1
 
-//#define RTI_ENABLED 1
+#define RTI_ENABLED 1
 
-#define MELBUS_ENABLED 1
+//#define MELBUS_ENABLED 1
 
 #define RTI_SERIAL_TX_DDR DDRB
 #define RTI_SERIAL_TX_PORT PORTB
@@ -28,6 +28,6 @@
 #define RELAY_BIT PD6
 
 //define this to receive CANBUS data via serial console
-//#define CANBUS_LOGGING_MODE 1
+#define CANBUS_LOGGING_MODE
 
 #endif

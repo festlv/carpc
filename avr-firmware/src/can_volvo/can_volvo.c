@@ -81,7 +81,7 @@ void can_volvo_init() {
         canbus_setup_filter(1, 1, 0xFFFFFFFF, brightness_message_id);
     #endif 
 
-    canbus_set_mode(LISTEN);
+    canbus_set_mode(NORMAL);
     RELAY_DDR |= 2<<RELAY_BIT;
     poweroff_event();
     rti_set_brightness(8);

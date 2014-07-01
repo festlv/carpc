@@ -118,7 +118,7 @@ int8_t canbus_init_controller() {
 int canbus_init() {
     canbus_init_controller();
     //sets CAN controller in listen mode
-    if (canbus_set_mode(LOOPBACK)!=1) {
+    if (canbus_set_mode(NORMAL)!=1) {
         printf("CAN init failed.\n");
         return 0;
     } else {

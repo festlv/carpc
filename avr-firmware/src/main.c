@@ -25,8 +25,11 @@
 
 
 int main(void) {
+    static CAN_MESSAGE can_msg;
+    static uint32_t next_time_ms = 0;
+
     uart_init();
-//    time_init();
+    time_init();
 #ifdef RTI_ENABLED
     printf("#RTI init\n");
     rti_init();
@@ -43,6 +46,9 @@ int main(void) {
     melbus_init();
 #endif
 
+    can_msg.id = 0xDEAD;
+    can_msg.data_len = 1;
+    can_msg.data[0] = 0xF0;
 
     while (1) {
 #ifdef RTI_ENABLED
@@ -56,5 +62,11 @@ int main(void) {
 #ifdef MELBUS_ENABLED
         melbus_step();
 #endif
+    if (next_time_ms == 0 || next_time_ms < time_ms()) {
+        printf("#Sending message \n");
+        canbus_write_tx_buffer(0, &can_msg);
+        next_time_ms = time_ms()+1000;
+    }
+
     }
 }
