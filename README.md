@@ -25,6 +25,8 @@ build.
    Runs the input driver which expects that microcontroller is connected to
    /dev/ttyAMA0 (serial port on RasPi).
 
+* **hardware/** contains schematics and PCB layout drawn in KiCad.
+
 
 For more information, please see: http://wot.lv/category/rpi-carpc.html
 
